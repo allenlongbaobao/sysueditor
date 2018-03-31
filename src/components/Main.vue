@@ -19,12 +19,12 @@
         <li >
           <div id="addMoreList" class="header-side-btn">
             <button class="add-article" @click="addArticle">发文</button
-            ><div class="add-more" @click="doOpenAddMore" >
+            ><div class="add-more" @mouseover="openPanel" @mouseleave="closePanel">
               <i class="add-more-dropdown typcn typcn-arrow-sorted-down"></i>
             </div>
-            <ul class="add-more-list" v-show="openAddMore" >
+            <ul class="add-more-list" v-show="openAddMore" @mouseover="openPanel" @mouseleave="closePanel"  >
               <li @click="addTopic"><a href="#">建话题</a></li>
-              <li @click="addActivity"><a href="#">发活动</a></li>
+              <li @click="addActivity"><a href="#">办活动</a></li>
             </ul>
           </div>
         </li>
@@ -39,6 +39,7 @@
     </div>
     <div class="body">
       <div class="left-side">
+        <h1>safasdf</h1>
         
       </div>
       <div class="right-side">
@@ -74,10 +75,10 @@ export default {
     }
   },
   methods: {
-    doOpenAddMore: function () {
-      this.openAddMore = !this.openAddMore
+    openPanel: function () {
+      this.openAddMore = true
     },
-    doCloseOpenAddMore: function () {
+    closePanel: function () {
       this.openAddMore = false
     },
     addArticle: function () {
@@ -208,6 +209,7 @@ export default {
           padding: 0;
           background-color: white;
           cursor: pointer;
+          text-align: center;
 
           a {
             color: #666;
