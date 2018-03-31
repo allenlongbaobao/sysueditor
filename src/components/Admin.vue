@@ -114,7 +114,7 @@ export default {
       }
     },
     signIn: function () {
-
+      this.$router.push({name: 'Main'})
     },
     signUp: function () {
     }

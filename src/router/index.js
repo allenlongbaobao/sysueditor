@@ -2,26 +2,31 @@ import Vue from 'vue'
 import Router from 'vue-router'
 
 const Admin = () => import('@/components/Admin.vue')
-const Main = () => import('@/components/Admin.vue')
-const Editor = () => import('@/components/Editor.vue')
+const Main = () => import('@/components/Main.vue')
+const addArticle = () => import('@/components/addArticle.vue')
 
 Vue.use(Router)
 export default new Router({
   routes: [
     {
       path: '/',
-      name: 'Main',
-      component: Main
+      name: 'Admin',
+      component: Admin
     },
     {
-      path: '/editor',
-      name: 'Editor',
-      component: Editor
+      path: '/addArticle',
+      name: 'addArticle',
+      component: addArticle
     },
     {
       path: '/admin',
       name: 'Admin',
       component: Admin
+    },
+    {
+      path: '/main',
+      name: 'Main',
+      component: Main
     }
   ]
 })
