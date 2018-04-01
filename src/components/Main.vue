@@ -5,7 +5,7 @@
       <ul class="header-side">
         <li>
           <ul class="header-side-menu">
-            <li v-for="(item, key) in menus">
+            <li v-for="item in menus">
               <a :href="item.link">{{item.name}}</a>
             </li>
           </ul>
@@ -14,7 +14,10 @@
           <img src="">
         </li>
         <li class="header-side-search">
-          <input type="search" name="search" placeholder="搜索">
+          <div class="header-side-search-wrap">
+            <input class="" type="search" name="search" placeholder="搜索">
+            <span class="typcn typcn-zoom icon"></span>
+          </div>
         </li>
         <li >
           <div id="addMoreList" class="header-side-btn">
@@ -30,7 +33,7 @@
         </li>
         <li class="header-side-alert">
           <span class="typcn typcn-world"></span>
-        </li>
+      </li>
         <li v-if="isSignIn" class="header-side-avator">
           <div class="header-side-avator-wrap">
           </div>
@@ -43,15 +46,25 @@
     </div>
     <div class="body">
       <div class="left-side">
-        <h1>safasdf</h1>
-        
+        <div class="left-side-item" v-for="item in articles">
+          <div class="left-side-item-left">
+            <span class="left-side-item-left-title">{{item.title.slice(0, 41)}}</span>
+            <ul>
+              <li class="left-side-item-left-type">{{item.type}}</li>
+              <li class="left-side-item-left-name">{{item.owner.name}}</li>
+              <li class="left-side-item-left-created">{{Date(item.createdAt)}}</li>
+            </ul>
+          </div>
+          <div class="left-side-item-right">
+            <img :src="item.titleImg">
+          </div>
+          
+        </div>
       </div>
       <div class="right-side">
-        
       </div>
     </div>
   </div>
- 
 </template>
 
 <script>
@@ -61,7 +74,7 @@ export default {
       openAddMore: false,
       isSignIn: false,
       menus: {
-        title1: 
+        title1:
         {
           name: '主页',
           link: '#'
@@ -76,7 +89,44 @@ export default {
           name: '活动',
           link: '#'
         }
+      },
+      articles: [
+      {
+        owner: {
+          uid: 'asdfasdfwe',
+          name: '小王'
+        },
+        content: '测试信息',
+        title: '这是一条测试消息',
+        titleImg: 'http://p6bztekng.bkt.clouddn.com/3255868.jpeg',
+        tag: ['tag1', 'tag2', 'tag3'],
+        type: '社团',
+        createdAt: '2018-04-01T11:59:46.746Z'
+      },
+      {
+        owner: {
+          uid: 'asdfasdfwe',
+          name: '小王'
+        },
+        content: '测试信息',
+        title: '这是一条测试消息',
+        titleImg: 'http://p6bztekng.bkt.clouddn.com/3255868.jpeg',
+        tag: ['tag1', 'tag2', 'tag3'],
+        type: '招聘',
+        createdAt: '2018-04-01T11:59:46.746Z'
+      },
+      {
+        owner: {
+          uid: 'asdfasdfwe',
+          name: '小王'
+        },
+        content: '测试信息xxxxxxxxxxxxxxxxxxxxxxxxsssssssss',
+        title: '这是一条测试消息xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
+        tag: ['tag1', 'tag2', 'tag3'],
+        type: '招聘',
+        createdAt: '2018-04-01T11:59:46.746Z'
       }
+      ]
     }
   },
   methods: {
@@ -106,12 +156,11 @@ export default {
     if (this.$route.params.signIn) {
       this.isSignIn = true
     }
-
   },
   mounted () {
     document.addEventListener('click', e => {
       const dialog = document.getElementById('addMoreList')
-      this.openAddMore = dialog.contains(e.target) ? true : false
+      this.openAddMore = dialog.contains(e.target)
     })
   }
 }
@@ -175,14 +224,20 @@ export default {
           color: green;
         }
       }
-      
-      input {
-        height: 2rem;
-        flex-basis: 1rem;
-        border-radius: 1rem;
-        border: 1px solid green;
-        outline: none;
-        height: 3rem;
+
+      .header-side-search-wrap {
+          border-radius: 1rem;
+          border: 1px solid green;
+        input {
+          height: 2rem;
+          width: 14rem;
+          flex-basis: 1rem;
+          outline: none;
+          border: none;
+          margin: .3rem .5rem .3rem .5rem;
+          font-size: 1.4rem;
+
+        }
       }
 
       .header-side-btn {
@@ -191,6 +246,7 @@ export default {
         .add-article {
           border-bottom-right-radius: 0px;
           border-top-right-radius: 0px;
+          width: 8rem;
         }
         .add-more {
           width: 1.5rem;
@@ -215,7 +271,7 @@ export default {
           top: 79%;
           display: flex;
           flex-direction: column;
-          width: 11.5rem;
+          width: 9.5rem;
           list-style: none;
           border: 1px solid;
           color: green;
@@ -271,15 +327,83 @@ export default {
   .body {
     display: flex;
     flex-direction: row;
-    justify-content: center; 
+    justify-content: center;
     height: 80rem;
     margin-top: 10rem;
 
     .left-side {
       width: 50%;
       height: 70rem;
-      border: 1px solid;
       margin-right: 5rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+
+      .left-side-item {
+        width: 100%;
+        height: 10rem;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        margin-bottom: .4rem;
+        background-color: #f4f5f5;
+        cursor: pointer;
+
+        .left-side-item-left {
+          display: flex;
+          flex-direction: column;
+          justify-content: space-around;
+          align-items: flex-start;
+          margin-left: 2rem;
+
+          .left-side-item-left-title {
+              font-weight: 600;
+              font-size: 1.8rem;
+              overflow: hidden;
+              line-height: 2rem;
+              height: 2rem;
+          }
+
+          .left-side-item-left-title:hover {
+            color: green;
+          }
+
+          ul {
+            display: flex;
+            flex-direction: row;
+            justify-content: flex-start;
+            margin: 0;
+            padding: 0;
+
+            li {
+              margin-left: 1rem;
+              padding: .2rem .5rem .2rem .5rem;
+            }
+
+            .left-side-item-left-type {
+              padding: .2rem .5rem .2rem .5rem;
+              background-color: #abbb79;
+              border-radius: .3rem;
+              text-align: center;
+            }
+          }
+        }
+
+        .left-side-item-right {
+          display: flex;
+          margin-right: 2rem;
+          align-items: center;
+          img {
+            width: 10rem;
+            height: 7rem;
+          }
+        }
+      }
+
+      .left-side-item:hover {
+        box-shadow: 1px 1px 15px rgba(55,173,112,0.15);
+        background-color: rgb(240,240,240);
+      }
     }
 
     .right-side {
