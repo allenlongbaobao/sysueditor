@@ -2,9 +2,16 @@
   <div class="wrap">
     <div class="header">
       <input type="text" name="" placeholder="请输入标题">
-      <span class="addTitleImg typcn typcn-image"></span>
+      <div class="panel-parent">
+        <span class="addTitleImg typcn typcn-image" @mouseover="openTitleImgPanel" @mouseleave="closeTitleImgPanel"></span>
+        <div v-show="titleImgPanelShow" class="panel addTitleImgPanel">
+        </div>
+      </div>
       <span @click="changeEditor">切换编辑器</span>
-      <span>发布</span>
+      <div @mouseover="openPublicSelectPanel" @mouseleave="closePublicSelectPanel" class="panel-parent">
+        <span>发布</span>
+        <div v-show="publicSelectBoxPanelShow" class="panel publicSelect"></div>
+      </div>
       <div>
         <div class="header-side-avator-wrap"></div>
       </div>
@@ -52,7 +59,9 @@ export default {
     return {
       editorContent: '',
       articleContent: '',
-      markEditorChosed: true
+      markEditorChosed: true,
+      titleImgPanelShow: false,
+      publicSelectBoxPanelShow: false
     }
   },
   components: {
@@ -64,6 +73,18 @@ export default {
     }
   },
   methods: {
+    openTitleImgPanel: function () {
+      this.titleImgPanelShow = true
+    },
+    closeTitleImgPanel: function () {
+      this.titleImgPanelShow = false
+    },
+    openPublicSelectPanel: function () {
+      this.publicSelectBoxPanelShow = true
+    },
+    closePublicSelectPanel: function () {
+      this.publicSelectBoxPanelShow = false
+    },
     updateContent: function (e) {
       this.articleContent = e.target.value
     },
@@ -95,13 +116,16 @@ export default {
 
   .header {
     width: 100%;
-    height: 7%;
+    height: 5rem;
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
+    justify-content: space-around;
     align-items: center;
-    border-bottom: 1px solid;
-    position: fixed;
+    border-bottom: 1px solid #ccc;
+    position: fixed;  
+    margin-left: 5rem;
+    margin-right: 5rem;
+
 
     span {
       cursor: pointer;
@@ -125,6 +149,18 @@ export default {
       font-size: 3rem;
     }
 
+    .addTitleImgPanel {
+      width: 20rem;
+      height: 20rem;
+    }
+
+    .publicSelect {
+      top: 137%;
+      left: -260%;
+      width: 25rem;
+      height: 20rem;
+    }
+
     .header-side-avator-wrap {
       border-radius: 50%;
       border: 1px solid;
@@ -137,18 +173,17 @@ export default {
 
   .body {
     display: flex;
-    top: 7%;
+    top: 5rem;
     left: 0;
     right: 0;
     bottom: 0;
     position: absolute;
     overflow: hidden;
-    height: 93%;
+    height: 92.8%;
 
     .body-left {
       height: 100%;
       width: 50%;
-      border: 1px solid;
       display: flex;
 
       textarea {
