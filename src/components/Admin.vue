@@ -2,8 +2,10 @@
   <div class="wrap">
     <p class="site-name">SYSU AREA</p>
     <form class="signin" v-show="hasAccount">
-      <input type="text" name="signin-email" placeholder="邮箱">
-      <input type="password" name="signin-pass" placeholder="密码">
+      <input id="signinEmail" type="text" name="signin-email" placeholder="邮箱" @input="clearSignFail">
+      <input id="signinPass" type="password" name="signin-pass" placeholder="密码" @inpu="clearSignFail">
+      <input id="signinReset" type="reset" name="" style="display:none;">
+      <span v-show="signinFail" class="legal-info">账号错误，请重新输入</span>
       <div>
         <button type="button" class="sigin-btn" @click="signIn">登录</button>
         <a href="javascript:(void 0)" @click="showSignup">注册</a>
@@ -11,19 +13,21 @@
       </div>
     </form>
     <form class="signup" v-show="!hasAccount">
-      <input type="text" name="sigup-email" placeholder="邮箱" @input="checkEmail">
-      <span class="legalInfo" v-if="emailIllegal">{{emailIllegalInfo}}</span>
-      <img class="legalInfo" v-if="!emailIllegal" src="#">
-      <input id="password" type="password" name="signup-pass" placeholder="密码" @input="checkPass">
-      <span class="legalInfo" v-if="passIllegal">密码长度应大于5小于13</span>
+      <input id="signupName" type="text" name="signup-name" placeholder="用户名" @input="checkName">
+      <span class="legal-info">{{nameIllegalInfo}}</span>
+      <input id="signupEmail" type="text" name="sigup-email" placeholder="邮箱" @input="checkEmail">
+      <span class="legal-info">{{emailIllegalInfo}}</span>
+      <input id="signupPass" type="password" name="signup-pass" placeholder="密码" @input="checkPass">
+      <span class="legal-info" v-if="passIllegal">密码长度应大于5小于13</span>
       <input type="password" name="signup-pass-repeat" placeholder="重复密码" @input="checkPassConsist">
-      <span class="legalInfo" v-if="passConsistIllegal">两次密码输入不一致</span>
+      <span class="legal-info" v-if="passConsistIllegal">两次密码输入不一致</span>
+      <input id="signupReset" type="reset" style="display: none">
       <div>
+        <span v-show="signUpFail" class="legal-info">注册失败</span>
         <button type="button" class="signup-btn" @click="signUp">注册</button>
         <a href="javascript:(void 0)" @click="showSignin">已有账号</a>
       </div>
     </form>
-    <br/>
     <p class="three-part-p">第三方登录</p>
     <ul class="three-part-list">
       <li v-for="item in threeParts">
@@ -43,9 +47,12 @@ export default {
   data () {
     return {
       hasAccount: true,
-      emailIllegal: true,
+      nameIllegal: false,
       passIllegal: false,
       passConsistIllegal: false,
+      signinFail: false,
+      signupFail: false,
+      nameIllegalInfo: '',
       emailIllegalInfo: '',
       threeParts: [{
         name: '微信',
@@ -60,7 +67,7 @@ export default {
     }
   },
   created () {
-
+    this.hasAccount = this.$route.params.type === 'signIn' ? true : false
   },
   methods: {
     showSignup: function () {
@@ -72,16 +79,39 @@ export default {
     forgetPass: function () {
       alert('oh, i forget')
     },
+    clearSignFail: function () {
+      if (this.signinFail === true) {
+        this.signinFail = false
+      }
+
+    },
+    checkName: function (e) {
+      let name = e.target.value
+      let regex = /^^(?!_)(?!.*?_$)[a-zA-Z0-9_\u4e00-\u9fa5]{6,12}$/
+      if (regex.test(name)) {
+        this.nameIllegalInfo = ''
+        this.$http.post(IP + '/api/checkNameExisted', {name}).then(response => {
+          console.log(response)
+          if (response.body.code !== 1) {
+            this.nameIllegalInfo = '用户名已存在，请重新输入'
+          }
+        })
+      } else if (name !== '') {
+        this.nameIllegalInfo = '用户名格式不正确'
+      } else {
+        this.nameIllegalInfo = ''
+      }
+    },
     checkEmail: function (e) {
       let value = e.target.value
       let regex = /^[A-Za-z0-9\u4e00-\u9fa5]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/
       if (regex.test(value)) {
         this.emailIllegalInfo = ''
-        this.$http.get(IP + '/api/checkEmail').then(response => {
-          if (response.data !== null) {
-            this.emailIllegal = true
-          } else {
+        this.$http.post(IP + '/api/checkEmailExisted', {email: value}).then(response => {
+          console.log(response)
+          if (response.body.code !== 1) {
             this.emailIllegalInfo = '邮箱已存在，请重新输入'
+          } else {
           }
         })
       } else if (value !== '') {
@@ -106,7 +136,7 @@ export default {
     },
     checkPassConsist: function (e) {
       const passConsist = e.target.value
-      const pass = document.getElementById('password').value
+      const pass = document.getElementById('signupPass').value
       if (pass === passConsist) {
         this.passConsistIllegal = false
       } else {
@@ -114,9 +144,37 @@ export default {
       }
     },
     signIn: function () {
-      this.$router.push({name: 'Main'})
+      const email = document.getElementById('signinEmail').value
+      const pass = document.getElementById('signinPass').value
+      const data = {email, pass}
+
+      this.$http.post(IP + '/api/signIn', data).then(response => {
+        console.log(response)
+        if (response.body.code !== 1) {
+          this.signinFail = true
+          document.getElementById('signinReset').click()
+        } else {
+          this.$router.push({name: 'Main', params: {data: response.body.data, signIn: true}})
+        }
+
+      })
     },
     signUp: function () {
+      const name = document.getElementById('signupName').value
+      const email = document.getElementById('signupEmail').value
+      const pass = document.getElementById('signupPass').value
+      const data = {name, email, pass}
+      console.log(data)
+
+      this.$http.post(IP + '/api/signUp', data).then(response => {
+        console.log(response)
+        if (response.body.code !== 1) {
+          this.signupFail = true
+          document.getElementById('signupReset').click()
+        } else {
+          this.$router.push({name: 'Main', params: {data: response.body.data, signIn: true}})
+        }
+      })
     }
   }
 }
@@ -152,7 +210,7 @@ export default {
     font-size: 2rem;
   }
 
-  .legalInfo {
+  .legal-info {
     align-self: flex-start;
     color: red;
   }

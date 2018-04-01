@@ -31,9 +31,13 @@
         <li class="header-side-alert">
           <span class="typcn typcn-world"></span>
         </li>
-        <li class="header-side-avator">
+        <li v-if="isSignIn" class="header-side-avator">
           <div class="header-side-avator-wrap">
           </div>
+        </li>
+        <li v-if="!isSignIn" class="header-side-sign">
+          <a @click="goSign('signIn')">登录</a>
+          <a @click="goSign('signUp')">注册</a>
         </li>
       </ul>
     </div>
@@ -55,6 +59,7 @@ export default {
   data () {
     return {
       openAddMore: false,
+      isSignIn: false,
       menus: {
         title1: 
         {
@@ -81,18 +86,27 @@ export default {
     closePanel: function () {
       this.openAddMore = false
     },
+    goSign: function (str) {
+      this.$router.push({name: 'Admin', params: {type: str}})
+    },
     addArticle: function () {
-      this.$router.push({name: 'addArticle'})
+      this.$router.push({name: 'AddArticle'})
       console.log('addArticle')
     },
     addTopic: function () {
-      this.$router.push({name: 'addTopic'})
+      this.$router.push({name: 'AddTopic'})
       console.log('addTopic')
     },
     addActivity: function () {
-      this.$router.push({name: 'addActivity'})
+      this.$router.push({name: 'AddActivity'})
       console.log('addActivity')
     }
+  },
+  created () {
+    if (this.$route.params.signIn) {
+      this.isSignIn = true
+    }
+
   },
   mounted () {
     document.addEventListener('click', e => {
@@ -238,6 +252,19 @@ export default {
         }
       }
 
+      .header-side-sign {
+        a {
+          cursor: pointer;
+        }
+
+        a:first-child::after{
+          content: '|'
+        }
+
+        a:hover {
+          color: green;
+        }
+      }
     }
   }
 

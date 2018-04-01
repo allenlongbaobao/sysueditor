@@ -85,6 +85,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import '../assets/css/common.css';
 .wrap {
   display: flex;
   flex-direction: column;
@@ -94,7 +95,7 @@ export default {
 
   .header {
     width: 100%;
-    height: 5rem;
+    height: 7%;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
@@ -117,6 +118,7 @@ export default {
       font-size: 3rem;
       color: #666;
       z-index: -1;
+      outline: none;
     }
 
     .addTitleImg {
@@ -135,13 +137,13 @@ export default {
 
   .body {
     display: flex;
-    top: 5rem;
+    top: 7%;
     left: 0;
     right: 0;
     bottom: 0;
     position: absolute;
     overflow: hidden;
-    height: 88%;
+    height: 93%;
 
     .body-left {
       height: 100%;
@@ -184,7 +186,7 @@ export default {
     justify-content: center;
     align-items: center;
     position: absolute;
-    top: 12rem;
+    top: 15%;
 
     #richtext-title {
       border: 1px solid;
