@@ -1,19 +1,28 @@
 <template>
   <div class="wrap">
     <div class="header">
-      <input type="text" name="" placeholder="请输入标题">
+      <input id="articleTitle" type="text" name="" placeholder="请输入标题">
       <div class="panel-parent">
-        <span class="addTitleImg typcn typcn-image" @mouseover="openTitleImgPanel" @mouseleave="closeTitleImgPanel"></span>
-        <div v-show="titleImgPanelShow" class="panel addTitleImgPanel">
+        <span data-panel-type="titleImgPanelShow" class="addTitleImg typcn typcn-image" @click="switchPanel"></span>
+        <div v-show="panels.titleImgPanelShow" class="panel addTitleImgPanel">
         </div>
       </div>
       <span @click="changeEditor">切换编辑器</span>
-      <div @mouseover="openPublicSelectPanel" @mouseleave="closePublicSelectPanel" class="panel-parent">
-        <span>发布</span>
-        <div v-show="publicSelectBoxPanelShow" class="panel publicSelect"></div>
+      <div class="panel-parent">
+        <span data-panel-type="publicSelectBoxPanelShow" @click="switchPanel">发布</span>
+        <div v-show="panels.publicSelectBoxPanelShow" class="panel publicSelect">
+          <span>标签</span>
+          <div class="publicSelect-type">
+            <div v-for="item in typeItems" @click="activeItem">
+              {{item}}
+            </div>
+          </div>
+          
+          <button class="publicSelect-type-submit" @click="addArticle">确认发布</button>
+        </div>
       </div>
       <div>
-        <div class="header-side-avator-wrap"></div>
+        <span @click="goMainPage">返回</span>
       </div>
     </div>
     <div v-if="markEditorChosed" class="body">
@@ -60,8 +69,9 @@ export default {
       editorContent: '',
       articleContent: '',
       markEditorChosed: true,
-      titleImgPanelShow: false,
-      publicSelectBoxPanelShow: false
+      panels: {titleImgPanelShow: false, publicSelectBoxPanelShow: false},
+      typeItems: ['社团', '招聘', '求助', '随笔'],
+      selectType: ''
     }
   },
   components: {
@@ -73,24 +83,50 @@ export default {
     }
   },
   methods: {
-    openTitleImgPanel: function () {
-      this.titleImgPanelShow = true
-    },
-    closeTitleImgPanel: function () {
-      this.titleImgPanelShow = false
-    },
-    openPublicSelectPanel: function () {
-      this.publicSelectBoxPanelShow = true
-    },
-    closePublicSelectPanel: function () {
-      this.publicSelectBoxPanelShow = false
+    switchPanel: function (e) {
+      const type = e.target.dataset.panelType
+      for(let p in this.panels) {
+        this.panels[p] = p === type ? !this.panels[p] : false
+      }
     },
     updateContent: function (e) {
       this.articleContent = e.target.value
     },
     changeEditor: function () {
+      if (this.markEditorChosed === true) {
+        this.articleContent = ''
+      } else {
+        this.editorContent = ''
+      }
       this.markEditorChosed = !this.markEditorChosed
+    },
+    activeItem: function (e) {
+      const children = e.target.parentElement.children
+      for(let i = 0; i < children.length; i++) {
+        children[i].className = ''
+      }
+      e.target.className = 'active'
+      this.selectType = e.target.value
+    },
+    goMainPage: function () {
+      this.$router.push({path: '/home'})
+    },
+    addArticle: function () {
+      let data = {
+        title: document.getElementById('articleTitle'),
+        content: this.articleContent === '' ? this.editorContent : this.articleContent, // 两种编辑器只能选其中一种
+        type: this.selectType,
+        owner: {
+          uid: '',
+          name: ''
+        },
+        createdAt: new Date()
+      }
+      this.$http.post(IP + '/api/addArticle', data).then(response => {
+
+      })
     }
+
   },
   mounted () {
     let editorTitle= document.getElementById('richtext-title')
@@ -123,9 +159,7 @@ export default {
     align-items: center;
     border-bottom: 1px solid #ccc;
     position: fixed;  
-    margin-left: 5rem;
-    margin-right: 5rem;
-
+    z-index: 100;
 
     span {
       cursor: pointer;
@@ -159,6 +193,48 @@ export default {
       left: -260%;
       width: 25rem;
       height: 20rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-around;
+      align-items: flex-start;
+      z-index: 1001;
+      background-color: white;
+
+      .publicSelect-type {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        padding: 2rem;
+        align-self: center;
+
+        div {
+          border: 1px solid #ccc;
+          border-radius: 2px;
+          width: 5rem;
+          height: 3rem;
+          text-align: center;
+          padding: 1px;
+          margin: 0 1px 1px 3px;
+          display: inline-block;
+          cursor: pointer;
+        }
+
+        .active {
+          border-color: green;
+          color: green;
+        }
+
+        div:hover {
+          border-color: green;
+          color: green;
+        }
+      }
+
+      .publicSelect-type-submit {
+        align-self: center;
+      }
+
+
     }
 
     .header-side-avator-wrap {

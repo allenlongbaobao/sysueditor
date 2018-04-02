@@ -23,7 +23,7 @@
       <span class="legal-info" v-if="passConsistIllegal">两次密码输入不一致</span>
       <input id="signupReset" type="reset" style="display: none">
       <div>
-        <span v-show="signUpFail" class="legal-info">注册失败</span>
+        <span v-show="signupFail" class="legal-info">注册失败</span>
         <button type="button" class="signup-btn" @click="signUp">注册</button>
         <a href="javascript:(void 0)" @click="showSignin">已有账号</a>
       </div>
@@ -148,13 +148,15 @@ export default {
       const pass = document.getElementById('signinPass').value
       const data = {email, pass}
 
-      this.$http.post(IP + '/api/signIn', data).then(response => {
+      this.$http.post(IP + '/api/signIn', data, {
+        withCredentials: true
+      }).then(response => {
         console.log(response)
         if (response.body.code !== 1) {
           this.signinFail = true
           document.getElementById('signinReset').click()
         } else {
-          this.$router.push({name: 'Main', params: {data: response.body.data, signIn: true}})
+          this.$router.push({path: '/home', params: {data: response.body.data, signIn: true}})
         }
 
       })
@@ -166,13 +168,15 @@ export default {
       const data = {name, email, pass}
       console.log(data)
 
-      this.$http.post(IP + '/api/signUp', data).then(response => {
+      this.$http.post(IP + '/api/signUp', data, {
+        withCredentials: true
+      }).then(response => {
         console.log(response)
         if (response.body.code !== 1) {
           this.signupFail = true
           document.getElementById('signupReset').click()
         } else {
-          this.$router.push({name: 'Main', params: {data: response.body.data, signIn: true}})
+          this.$router.push({path: '/home', params: {data: response.body.data, signIn: true}})
         }
       })
     }

@@ -6,7 +6,7 @@
         <li>
           <ul class="header-side-menu">
             <li v-for="item in menus">
-              <a :href="item.link">{{item.name}}</a>
+              <span @click="goHomePage">{{item.name}}</span>
             </li>
           </ul>
         </li>
@@ -35,7 +35,14 @@
           <span class="typcn typcn-world"></span>
       </li>
         <li v-if="isSignIn" class="header-side-avator">
-          <div class="header-side-avator-wrap">
+          <div id="userInfoPanel"class="panel-parent">
+            <div class="header-side-avator-wrap" @click="switchUserInfoPanel"></div>
+            <div v-show="userInfoPanel"class="panel user-info">
+              <div @click="goUserPage"><span class="typcn typcn-home-outline"></span>个人主页</div>
+              <div><span class="typcn typcn-cog-outline"></span>设置</div>
+              <div><span class="typcn typcn-th-large-outline"></span>关于</div>
+              <div @click="signOut"><span class="typcn typcn-arrow-back-outline"></span>注销</div>
+            </div>
           </div>
         </li>
         <li v-if="!isSignIn" class="header-side-sign">
@@ -44,40 +51,25 @@
         </li>
       </ul>
     </div>
-    <div class="body">
-      <div class="left-side">
-        <div class="left-side-item" v-for="item in articles">
-          <div class="left-side-item-left">
-            <span class="left-side-item-left-title">{{item.title.slice(0, 41)}}</span>
-            <ul>
-              <li class="left-side-item-left-type">{{item.type}}</li>
-              <li class="left-side-item-left-name">{{item.owner.name}}</li>
-              <li class="left-side-item-left-created">{{Date(item.createdAt)}}</li>
-            </ul>
-          </div>
-          <div class="left-side-item-right">
-            <img :src="item.titleImg">
-          </div>
-          
-        </div>
-      </div>
-      <div class="right-side">
-      </div>
-    </div>
+    <router-view></router-view>
   </div>
 </template>
 
 <script>
+import config from '../../config/dev.env.js'
+const IP = config.SERVER_IP
+
 export default {
   data () {
     return {
       openAddMore: false,
       isSignIn: false,
+      userInfoPanel: false,
       menus: {
         title1:
         {
           name: '主页',
-          link: '#'
+          link: '/'
         },
         title2:
         {
@@ -136,8 +128,17 @@ export default {
     closePanel: function () {
       this.openAddMore = false
     },
+    switchUserInfoPanel: function () {
+      this.userInfoPanel = this.userInfoPanel === false ? true : false
+    },
     goSign: function (str) {
       this.$router.push({name: 'Admin', params: {type: str}})
+    },
+    goUserPage: function () {
+      this.$router.push({path: '/user'})
+    },
+    goHomePage: function () {
+      this.$router.push({path: '/home'})
     },
     addArticle: function () {
       this.$router.push({name: 'AddArticle'})
@@ -150,17 +151,43 @@ export default {
     addActivity: function () {
       this.$router.push({name: 'AddActivity'})
       console.log('addActivity')
+    },
+    signIn: function () {
+      this.$http.post(
+        IP + '/api/signIn', 
+        {}, 
+        {
+          withCredentials: true,
+          progress: event => {
+            //this.masterShow = true
+          }
+        }).then(response => {
+          if (response.body.code === 1) {
+            // 用户已登录
+            this.isSignIn = true
+          }
+        })
+    },
+    signOut: function () {
+      this.$http.post(IP + '/api/signOut', {}, {withCredentials: true}).then(response => {
+        if (response.body.code === 1) {
+          this.isSignIn = false
+          this.$router.push({name: 'Admin', params: {type: 'signIn'}})
+        }
+      })
     }
   },
   created () {
     if (this.$route.params.signIn) {
       this.isSignIn = true
+    } else {
+      this.signIn()
     }
   },
   mounted () {
-    document.addEventListener('click', e => {
-      const dialog = document.getElementById('addMoreList')
-      this.openAddMore = dialog.contains(e.target)
+    document.addEventListener('click', e =>{
+      const dialog = document.getElementById('userInfoPanel')
+      this.userInfoPanel = dialog.contains(e.target)
     })
   }
 }
@@ -212,15 +239,16 @@ export default {
         justify-content: space-between;
         width: 20rem;
         padding: 0;
-        a {
+        span {
           text-decoration: none;
           color: black;
+          cursor: pointer;
         }
 
-        li:first-child > a {
+        li:first-child > span {
           color: green;
         }
-        li:hover > a {
+        li:hover > span {
           color: green;
         }
       }
@@ -236,7 +264,7 @@ export default {
           border: none;
           margin: .3rem .5rem .3rem .5rem;
           font-size: 1.4rem;
-
+          -webkit-appearance: none;
         }
       }
 
@@ -306,6 +334,34 @@ export default {
           background-image: url(http://p6bztekng.bkt.clouddn.com/3255868.jpeg);
           cursor: pointer;
         }
+
+        .user-info {
+          width: 10rem;
+          height: auto;
+          display: flex;
+          flex-direction: column;
+          justify-content: space-around;
+          align-items: center;
+          left: -90%;
+          padding: .5rem 0 .5rem 0;
+
+          div {
+            width: 10rem;
+            text-align: left;
+            cursor: pointer;
+            z-index: 1001;
+            font-size: 1.5rem;
+            padding: .8rem 0 .8rem 0;
+
+            span {
+              margin: 0 .8rem 0 .8rem;
+            }
+          }
+
+          div:hover {
+            background-color: #ccc;
+          }
+        }
       }
 
       .header-side-sign {
@@ -321,94 +377,6 @@ export default {
           color: green;
         }
       }
-    }
-  }
-
-  .body {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    height: 80rem;
-    margin-top: 10rem;
-
-    .left-side {
-      width: 50%;
-      height: 70rem;
-      margin-right: 5rem;
-      display: flex;
-      flex-direction: column;
-      justify-content: flex-start;
-
-      .left-side-item {
-        width: 100%;
-        height: 10rem;
-        display: flex;
-        flex-direction: row;
-        justify-content: space-between;
-        margin-bottom: .4rem;
-        background-color: #f4f5f5;
-        cursor: pointer;
-
-        .left-side-item-left {
-          display: flex;
-          flex-direction: column;
-          justify-content: space-around;
-          align-items: flex-start;
-          margin-left: 2rem;
-
-          .left-side-item-left-title {
-              font-weight: 600;
-              font-size: 1.8rem;
-              overflow: hidden;
-              line-height: 2rem;
-              height: 2rem;
-          }
-
-          .left-side-item-left-title:hover {
-            color: green;
-          }
-
-          ul {
-            display: flex;
-            flex-direction: row;
-            justify-content: flex-start;
-            margin: 0;
-            padding: 0;
-
-            li {
-              margin-left: 1rem;
-              padding: .2rem .5rem .2rem .5rem;
-            }
-
-            .left-side-item-left-type {
-              padding: .2rem .5rem .2rem .5rem;
-              background-color: #abbb79;
-              border-radius: .3rem;
-              text-align: center;
-            }
-          }
-        }
-
-        .left-side-item-right {
-          display: flex;
-          margin-right: 2rem;
-          align-items: center;
-          img {
-            width: 10rem;
-            height: 7rem;
-          }
-        }
-      }
-
-      .left-side-item:hover {
-        box-shadow: 1px 1px 15px rgba(55,173,112,0.15);
-        background-color: rgb(240,240,240);
-      }
-    }
-
-    .right-side {
-      width: 20%;
-      border: 1px solid;
     }
   }
 }

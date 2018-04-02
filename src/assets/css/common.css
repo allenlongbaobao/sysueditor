@@ -15,12 +15,14 @@ button {
   position: relative;
 }
 .panel {
+  background-color: white;
   border: 1px solid #ddd;
   width: 10rem;
   height: 10rem;
   position: absolute;
   top: 120%;
   left: -290%;
+  z-index: 100;
 }
 
 .panel::before {
