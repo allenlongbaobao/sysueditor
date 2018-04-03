@@ -156,7 +156,7 @@ export default {
           this.signinFail = true
           document.getElementById('signinReset').click()
         } else {
-          this.$router.push({path: '/home', params: {data: response.body.data, signIn: true}})
+          this.$router.push({path: '/', params: {data: response.body.data, signIn: true}})
         }
 
       })
@@ -176,7 +176,7 @@ export default {
           this.signupFail = true
           document.getElementById('signupReset').click()
         } else {
-          this.$router.push({path: '/home', params: {data: response.body.data, signIn: true}})
+          this.$router.push({path: '/', params: {data: response.body.data, signIn: true}})
         }
       })
     }

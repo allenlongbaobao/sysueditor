@@ -47,6 +47,8 @@ import marked from 'marked'
 import highlightjs from 'highlightjs'
 import markHtml from './pages/MarkHtml.vue'
 import E from 'wangEditor'
+import config from '../../config/dev.env.js'
+const IP = config.SERVER_IP
 
 marked.setOptions({
   renderer: new marked.Renderer(),
@@ -106,24 +108,21 @@ export default {
         children[i].className = ''
       }
       e.target.className = 'active'
-      this.selectType = e.target.value
+      this.selectType = e.target.innerText
     },
     goMainPage: function () {
-      this.$router.push({path: '/home'})
+      this.$router.push({path: '/'})
     },
     addArticle: function () {
       let data = {
-        title: document.getElementById('articleTitle'),
+        title: document.getElementById('articleTitle').value,
         content: this.articleContent === '' ? this.editorContent : this.articleContent, // 两种编辑器只能选其中一种
         type: this.selectType,
-        owner: {
-          uid: '',
-          name: ''
-        },
-        createdAt: new Date()
+        new: true
       }
-      this.$http.post(IP + '/api/addArticle', data).then(response => {
-
+      this.$http.post(IP + '/api/addOrModifyArticle', data, {withCredentials: true}).then(response => {
+        console.log(response.body)
+        this.goMainPage()
       })
     }
 

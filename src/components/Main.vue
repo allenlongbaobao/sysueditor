@@ -1,8 +1,8 @@
 <template>
   <div class="wrap">
-    <div class="header">
+    <div id="header" class="header">
       <span class="logo">中大地带</span>
-      <ul class="header-side">
+      <ul id="header-side" class="header-side">
         <li>
           <ul class="header-side-menu">
             <li v-for="item in menus">
@@ -10,16 +10,13 @@
             </li>
           </ul>
         </li>
-        <li>
-          <img src="">
-        </li>
         <li class="header-side-search">
           <div class="header-side-search-wrap">
             <input class="" type="search" name="search" placeholder="搜索">
             <span class="typcn typcn-zoom icon"></span>
           </div>
         </li>
-        <li >
+        <li  class="header-side-btn-wrap">
           <div id="addMoreList" class="header-side-btn">
             <button class="add-article" @click="addArticle">发文</button
             ><div class="add-more" @mouseover="openPanel" @mouseleave="closePanel">
@@ -33,11 +30,11 @@
         </li>
         <li class="header-side-alert">
           <span class="typcn typcn-world"></span>
-      </li>
-        <li v-if="isSignIn" class="header-side-avator">
+        </li>
+        <li v-show="isSignIn" class="header-side-avator">
           <div id="userInfoPanel"class="panel-parent">
             <div class="header-side-avator-wrap" @click="switchUserInfoPanel"></div>
-            <div v-show="userInfoPanel"class="panel user-info">
+            <div v-show="userInfoPanel"class="panel user-info"@click="switchUserInfoPanel">
               <div @click="goUserPage"><span class="typcn typcn-home-outline"></span>个人主页</div>
               <div><span class="typcn typcn-cog-outline"></span>设置</div>
               <div><span class="typcn typcn-th-large-outline"></span>关于</div>
@@ -45,7 +42,7 @@
             </div>
           </div>
         </li>
-        <li v-if="!isSignIn" class="header-side-sign">
+        <li v-show="!isSignIn" class="header-side-sign">
           <a @click="goSign('signIn')">登录</a>
           <a @click="goSign('signUp')">注册</a>
         </li>
@@ -81,44 +78,7 @@ export default {
           name: '活动',
           link: '#'
         }
-      },
-      articles: [
-      {
-        owner: {
-          uid: 'asdfasdfwe',
-          name: '小王'
-        },
-        content: '测试信息',
-        title: '这是一条测试消息',
-        titleImg: 'http://p6bztekng.bkt.clouddn.com/3255868.jpeg',
-        tag: ['tag1', 'tag2', 'tag3'],
-        type: '社团',
-        createdAt: '2018-04-01T11:59:46.746Z'
-      },
-      {
-        owner: {
-          uid: 'asdfasdfwe',
-          name: '小王'
-        },
-        content: '测试信息',
-        title: '这是一条测试消息',
-        titleImg: 'http://p6bztekng.bkt.clouddn.com/3255868.jpeg',
-        tag: ['tag1', 'tag2', 'tag3'],
-        type: '招聘',
-        createdAt: '2018-04-01T11:59:46.746Z'
-      },
-      {
-        owner: {
-          uid: 'asdfasdfwe',
-          name: '小王'
-        },
-        content: '测试信息xxxxxxxxxxxxxxxxxxxxxxxxsssssssss',
-        title: '这是一条测试消息xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
-        tag: ['tag1', 'tag2', 'tag3'],
-        type: '招聘',
-        createdAt: '2018-04-01T11:59:46.746Z'
       }
-      ]
     }
   },
   methods: {
@@ -138,7 +98,7 @@ export default {
       this.$router.push({path: '/user'})
     },
     goHomePage: function () {
-      this.$router.push({path: '/home'})
+      this.$router.push({path: '/'})
     },
     addArticle: function () {
       this.$router.push({name: 'AddArticle'})
@@ -195,7 +155,6 @@ export default {
 
 <style lang="scss" scoped>
 @import '../assets/css/common.css';
-
 .wrap {
   display: flex;
   flex-direction: column;
@@ -205,7 +164,7 @@ export default {
 
   .header {
     display: flex;
-    justify-content: flex-start;
+    justify-content: center;
     align-items: center;
     height: 5rem;
     border-bottom: 1px solid;
@@ -216,7 +175,7 @@ export default {
 
     .logo {
       font-size: 3rem;
-      padding-left: 16rem;
+      flex: .4 0 auto;
     }
 
     .header-side {
@@ -229,6 +188,8 @@ export default {
       list-style: none;
       font-size: 2rem;
       padding: 0;
+
+
 
       .header-side-menu {
         display: flex;
@@ -378,6 +339,42 @@ export default {
         }
       }
     }
+  }
+}
+
+@media all and (max-width: 800px) {
+  .header-side-search {
+    display: none;
+  }
+
+  .header-side-btn-wrap {
+    display: none;
+  }
+
+  .logo {
+    display: none;
+  }
+}
+
+@media all and (max-width: 600px) {
+  .header-side-search {
+    display: none;
+  }
+
+  .header-side-btn {
+    display: none;
+  }
+
+  .header-side-alert {
+    display: none;
+  }
+
+  .logo {
+    display: none;
+  }
+
+  #header-side {
+    width: 100%;
   }
 }
 </style>

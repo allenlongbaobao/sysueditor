@@ -18,7 +18,7 @@ export default new Router({
       name: 'Main',
       component: Main,
       children: [{
-        path: 'home',
+        path: '',
         component: Home
       },
       {
@@ -26,7 +26,8 @@ export default new Router({
         component: UserPage
       },
       {
-        path: 'article/',
+        path: 'article/:id',
+        name: 'Article',
         component: Article
       }]
     },
