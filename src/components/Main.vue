@@ -36,7 +36,7 @@
             <div class="header-side-avator-wrap" @click="switchUserInfoPanel"></div>
             <div v-show="userInfoPanel"class="panel user-info"@click="switchUserInfoPanel">
               <div @click="goUserPage"><span class="typcn typcn-home-outline"></span>个人主页</div>
-              <div><span class="typcn typcn-cog-outline"></span>设置</div>
+              <div @click="goProfile"><span class="typcn typcn-cog-outline"></span>设置</div>
               <div><span class="typcn typcn-th-large-outline"></span>关于</div>
               <div @click="signOut"><span class="typcn typcn-arrow-back-outline"></span>注销</div>
             </div>
@@ -59,6 +59,7 @@ const IP = config.SERVER_IP
 export default {
   data () {
     return {
+      id: '',
       openAddMore: false,
       isSignIn: false,
       userInfoPanel: false,
@@ -97,6 +98,9 @@ export default {
     goUserPage: function () {
       this.$router.push({path: '/user'})
     },
+    goProfile: function () {
+      this.$router.push({name: 'Profile', params: {id: this.id}})
+    },
     goHomePage: function () {
       this.$router.push({path: '/'})
     },
@@ -125,6 +129,8 @@ export default {
           if (response.body.code === 1) {
             // 用户已登录
             this.isSignIn = true
+            this.id = response.body.user._id
+            
           }
         })
     },
@@ -214,18 +220,27 @@ export default {
         }
       }
 
-      .header-side-search-wrap {
-          border-radius: 1rem;
-          border: 1px solid green;
-        input {
-          height: 2rem;
-          width: 14rem;
-          flex-basis: 1rem;
-          outline: none;
-          border: none;
-          margin: .3rem .5rem .3rem .5rem;
-          font-size: 1.4rem;
-          -webkit-appearance: none;
+      .header-side-search {
+        display: flex;
+        justify-content: center;
+
+        .header-side-search-wrap {
+            border-radius: 1rem;
+            border: 1px solid green;
+            width: 63%;
+          input {
+            height: 2rem;
+            width: 58%;
+            flex-basis: 1rem;
+            outline: none;
+            border: none;
+            margin: .3rem .5rem .3rem .5rem;
+            font-size: 1.4rem;
+            -webkit-appearance: none;
+          }
+          span {
+            width: 10%;
+          }
         }
       }
 
@@ -357,7 +372,7 @@ export default {
 }
 
 @media all and (max-width: 600px) {
-  .header-side-search {
+  .header-side-search .header-side-search-wrap {
     display: none;
   }
 

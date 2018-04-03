@@ -3,7 +3,7 @@
 		<div class="title-wrap">
 			<h1 class="title-wrap-title">{{article.title}}</h1>
 			<div class="title-wrap-info">
-				<span class="title-wrap-info-name">{{article.owner.name}}</span>
+				<a class="title-wrap-info-name">{{article.owner.name}}</a>
 				<span class="title-wrap-info-createdAt">{{getDate(article.createdAt)}}</span>
 			</div>
 		</div>
@@ -136,8 +136,13 @@ export default {
 
   		.title-wrap-info-name {
   			margin-right: 2rem;
-
+  			cursor: pointer;
   		}
+
+  		.title-wrap-info-name:hover {
+  			color: green;
+  		}
+
 
   		.title-wrap-info-createdAt {
 

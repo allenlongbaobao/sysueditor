@@ -7,6 +7,7 @@ const Main = () => import('@/components/Main.vue')
 const AddArticle = () => import('@/components/AddArticle.vue')
 const Home = () => import('@/components/Home.vue')
 const UserPage = () => import('@/components/UserPage.vue')
+const Profile = () => import('@/components/Profile.vue')
 const Article = () => import('@/components/Article.vue')
 
 Vue.use(Router)
@@ -22,8 +23,13 @@ export default new Router({
         component: Home
       },
       {
-        path: 'user',
+        path: 'user/:id',
         component: UserPage
+      },
+      {
+        path: 'profile',
+        name: 'Profile',
+        component: Profile
       },
       {
         path: 'article/:id',

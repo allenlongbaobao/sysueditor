@@ -13,11 +13,11 @@
           </div>
         </div>
         <div class="left-side-item-right">
-          <img :src="item.titleImg">
         </div>
       </div>
     </div>
     <div class="right-side">
+      推荐信息
     </div>
   </div>
 </template>
@@ -134,6 +134,10 @@ export default {
             background-color: #abbb79;
             border-radius: .3rem;
             text-align: center;
+          }
+
+          .left-side-item-left-name:hover {
+            color: green;
           }
         }
       }
