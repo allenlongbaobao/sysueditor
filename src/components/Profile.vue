@@ -27,22 +27,6 @@
 						</div>
 					</div>
 				</li>
-				<li>
-					<div class="follower">
-						<span>关注的人:</span>
-					</div>
-				</li>
-				<li>
-					<div class="following">
-						<span>关注我的人:</span>
-					</div>
-				</li>
-				<li>
-					
-					<div class="society">
-						<span>认证社团:</span>
-					</div>
-				</li>
 			</ul>
 		</div>
 	</div>
@@ -58,7 +42,7 @@ export default {
 			displayUserInfo: {},
 			avator: '',
 			cnInfo: {
-				name: '真实姓名',
+				trueName: '真实姓名',
 				nickName: '昵称',
 				email: '邮箱',
 				birthday: '生日',

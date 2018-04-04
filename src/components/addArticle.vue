@@ -146,12 +146,13 @@ export default {
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: flex-start;
   height: 100%;
   width: 100%;
 
   .header {
     width: 100%;
-    height: 5rem;
+    height: 10%;
     display: flex;
     flex-direction: row;
     justify-content: space-around;
@@ -248,32 +249,30 @@ export default {
 
   .body {
     display: flex;
-    top: 5rem;
     left: 0;
     right: 0;
     bottom: 0;
     position: absolute;
     overflow: hidden;
-    height: 92.8%;
+    height: 90%;
 
     .body-left {
       height: 100%;
       width: 50%;
       display: flex;
+      background-color: #f6f6f6;
+      justify-content: flex-end;
+      align-items: center;
+      border-right: 1px solid #ccc;
 
       textarea {
         min-width: 0;
-        padding-left: 5rem;
-        padding-top: 2rem;
-        width: 100%;
-        height: 100%;
+        width: 90%;
+        height: 94%;
         border: none;
-        border-right: 1px solid #ccc;
         resize: none;
         outline: none;
-        background-color: #f6f6f6;
         font-size: 2rem;
-
       }
     }
 
@@ -281,8 +280,6 @@ export default {
       height: 100%;
       width: 50%;
       overflow: scroll;
-      padding-top: 2rem;
-      padding-left: 2rem;
       font-size: 2rem;
     }
   }
@@ -297,6 +294,7 @@ export default {
     align-items: center;
     position: absolute;
     top: 15%;
+    z-index: 1;
 
     #richtext-title {
       border: 1px solid;

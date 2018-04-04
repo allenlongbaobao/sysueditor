@@ -33,7 +33,7 @@
         </li>
         <li v-show="isSignIn" class="header-side-avator">
           <div id="userInfoPanel"class="panel-parent">
-            <div class="header-side-avator-wrap" @click="switchUserInfoPanel"></div>
+            <div id="userAvator" class="header-side-avator-wrap" @click="switchUserInfoPanel"></div>
             <div v-show="userInfoPanel"class="panel user-info"@click="switchUserInfoPanel">
               <div @click="goUserPage"><span class="typcn typcn-home-outline"></span>个人主页</div>
               <div @click="goProfile"><span class="typcn typcn-cog-outline"></span>设置</div>
@@ -96,7 +96,7 @@ export default {
       this.$router.push({name: 'Admin', params: {type: str}})
     },
     goUserPage: function () {
-      this.$router.push({path: '/user'})
+      this.$router.push({path: '/user/' + this.id})
     },
     goProfile: function () {
       this.$router.push({name: 'Profile', params: {id: this.id}})
@@ -129,8 +129,12 @@ export default {
           if (response.body.code === 1) {
             // 用户已登录
             this.isSignIn = true
+            // 用户ID
             this.id = response.body.user._id
-            
+            // 头像
+            let avator = document.getElementById('userAvator')
+            avator.style.backgroundImage = response.body.user.avator
+            avator.style.backgroundRepeat = 'round'
           }
         })
     },
@@ -164,7 +168,7 @@ export default {
 .wrap {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: flex-start;
   height: 100%;
   width: 100%;
 

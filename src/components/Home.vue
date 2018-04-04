@@ -7,7 +7,7 @@
           <div>
             <ul>
               <li class="left-side-item-left-type">{{item.type}}</li>
-              <li class="left-side-item-left-name">{{item.owner.name}}</li>
+              <li class="left-side-item-left-name">{{item.owner.nickName}}</li>
               <li class="left-side-item-left-created">{{getDate(item.createdAt)}}</li>
             </ul>
           </div>

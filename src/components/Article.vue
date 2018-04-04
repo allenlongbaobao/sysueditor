@@ -3,7 +3,7 @@
 		<div class="title-wrap">
 			<h1 class="title-wrap-title">{{article.title}}</h1>
 			<div class="title-wrap-info">
-				<a class="title-wrap-info-name">{{article.owner.name}}</a>
+				<a class="title-wrap-info-name">{{article.owner.nickName}}</a>
 				<span class="title-wrap-info-createdAt">{{getDate(article.createdAt)}}</span>
 			</div>
 		</div>
