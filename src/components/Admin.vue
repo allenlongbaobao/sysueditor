@@ -86,17 +86,17 @@ export default {
 
     },
     checkName: function (e) {
-      let name = e.target.value
+      let nickName = e.target.value
       let regex = /^^(?!_)(?!.*?_$)[a-zA-Z0-9_\u4e00-\u9fa5]{6,12}$/
-      if (regex.test(name)) {
+      if (regex.test(nickName)) {
         this.nameIllegalInfo = ''
-        this.$http.post(IP + '/api/checkNameExisted', {name}).then(response => {
+        this.$http.post(IP + '/api/checkNickNameExisted', {nickName}).then(response => {
           console.log(response)
           if (response.body.code !== 1) {
             this.nameIllegalInfo = '用户名已存在，请重新输入'
           }
         })
-      } else if (name !== '') {
+      } else if (nickName !== '') {
         this.nameIllegalInfo = '用户名格式不正确'
       } else {
         this.nameIllegalInfo = ''
@@ -162,10 +162,10 @@ export default {
       })
     },
     signUp: function () {
-      const name = document.getElementById('signupName').value
+      const nickName = document.getElementById('signupName').value
       const email = document.getElementById('signupEmail').value
       const pass = document.getElementById('signupPass').value
-      const data = {name, email, pass}
+      const data = {nickName, email, pass}
       console.log(data)
 
       this.$http.post(IP + '/api/signUp', data, {
