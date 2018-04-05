@@ -103,6 +103,7 @@ export default {
         align-items: flex-start;
         margin-left: 2rem;
         flex: 0 0 100%;
+        height: 10rem;
 
         .left-side-item-left-title {
         		flex: 0 0 60%;
